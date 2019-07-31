@@ -31,7 +31,7 @@ server.post('/tmp', (req, res, next) => {
 
 server.get('/ninja/:uid/:code', (req, res, next) => {
   const { uid, code } = req.params
-  ninjaClient.get(`/player/giftCode?uid=${uid}&code=${code}`, (err, _req, _res, obj) => {
+  ninjaClient.get(`/player/giftCode?uid=${uid}&code=${encodeURIComponent(code)}`, (err, _req, _res, obj) => {
     res.send(obj)
     next()
   })
