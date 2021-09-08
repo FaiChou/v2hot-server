@@ -27,26 +27,22 @@ server.get('/v2hot', (req, res, next) => {
 
 server.get('/newOrder', (req, res, next) => {
   const info = 'hello from restify'
-  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${info}`
-  console.log(path);
-  telegramClient.get(encodeURIComponent(path), (err, _req, _res, obj) => {
-    console.log(err);
-    console.log(_req);
-    console.log(obj);
+  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
+  telegramClient.get(path, (err, _req, _res, obj) => {
     res.send(obj)
     next()
   })
 })
 
-// server.post('/postOrder', (req, res, next) => {
-//   console.log(req.params)
-//   const info = 'hello from restify'
-//   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${info}`
-//   telegramClient.get(encodeURIComponent(path), (req2, res2, next2, obj) => {
-//     res.send(obj)
-//     next()
-//   })
-// })
+server.post('/postOrder', (req, res, next) => {
+  console.log(req.params)
+  const info = 'hello from restify'
+  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
+  telegramClient.get(path, (err, _req, _res, obj) => {
+    res.send(obj)
+    next()
+  })
+})
 
 server.get('/ninja/:uid/:code', (req, res, next) => {
   const { uid, code } = req.params
