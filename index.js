@@ -31,7 +31,10 @@ server.get('/newOrder', (req, res, next) => {
     'chat_id': process.env.TELEGRAM_CHAT_ID,
     text: 'hello from restify'
   }
-  telegramClient.post(path, data, (req2, res2, next2) => {
+  console.log(path);
+  console.log(data);
+  telegramClient.post(path, data, (req2, res2, next2, obj) => {
+    console.log(obj);
     res.send({ code: 0 })
     next()  
   })
