@@ -25,7 +25,7 @@ server.get('/v2hot', (req, res, next) => {
   })
 })
 
-server.post('/newOrder', (req, res, next) => {
+server.get('/newOrder', (req, res, next) => {
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage`
   const data = {
     'chat_id': process.env.TELEGRAM_CHAT_ID,
