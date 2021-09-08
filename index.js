@@ -4,6 +4,7 @@ const errors = require('restify-errors')
 const server = restify.createServer({ name: 'faichou' })
 
 const v2Client = restifyClient.createJsonClient({ url: 'https://www.v2ex.com' })
+const telegramClient = restifyClient.createJsonClient({ url: 'https://api.telegram.org' })
 const ninjaClient = restifyClient.createJsonClient({ url: 'http://statistics.pandadastudio.com' })
 
 server.pre(restify.plugins.pre.userAgentConnection())
@@ -24,9 +25,16 @@ server.get('/v2hot', (req, res, next) => {
   })
 })
 
-server.post('/tmp', (req, res, next) => {
-  res.send({ code: 0 })
-  next()
+server.post('/newOrder', (req, res, next) => {
+  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage`
+  const data = {
+    'chat_id': process.env.TELEGRAM_CHAT_ID,
+    text: 'hello from restify'
+  }
+  telegramClient.post(path, data, (req, res, next) => {
+    res.send({ code: 0 })
+    next()  
+  })
 })
 
 server.get('/ninja/:uid/:code', (req, res, next) => {
