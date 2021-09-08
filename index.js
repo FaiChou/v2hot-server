@@ -35,7 +35,7 @@ server.get('/newOrder', (req, res, next) => {
   })
 })
 
-server.post('/newOrder', (req, res, next) => {
+server.post('/postOrder', (req, res, next) => {
   console.log(req)
   const info = 'hello from restify'
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${info}`
