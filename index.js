@@ -27,11 +27,8 @@ server.get('/v2hot', (req, res, next) => {
 
 server.get('/newOrder', (req, res, next) => {
   const info = 'hello from restify'
-  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
-  console.log(path);
+  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
   telegramClient.get(path, (err, _req, _res, obj) => {
-    console.log(obj)
-    console.log(_req.url)
     res.send(obj)
     next()
   })
@@ -40,7 +37,7 @@ server.get('/newOrder', (req, res, next) => {
 server.post('/postOrder', (req, res, next) => {
   console.log(req.params)
   const info = 'hello from restify'
-  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
+  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
   telegramClient.get(path, (err, _req, _res, obj) => {
     res.send(obj)
     next()
