@@ -35,6 +35,9 @@ server.get('/newOrder', (req, res, next) => {
 })
 
 server.post('/postOrder', (req, res, next) => {
+  console.log('--- params ---')
+  console.log(req.params)
+  console.log('--- body ---')
   console.log(req.body)
   const info = 'New Order On Website'
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
