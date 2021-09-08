@@ -25,18 +25,13 @@ server.get('/v2hot', (req, res, next) => {
   })
 })
 
-server.get('/newOrder', (req, res, next) => {
-  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage`
-  const data = {
-    'chat_id': process.env.TELEGRAM_CHAT_ID,
-    text: 'hello from restify'
-  }
-  console.log(path);
-  console.log(data);
-  telegramClient.post(path, data, (req2, res2, next2, obj) => {
-    console.log(obj);
-    res.send({ code: 0 })
-    next()  
+server.post('/newOrder', (req, res, next) => {
+  console.log(req)
+  const info = 'hello from restify'
+  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${info}`
+  telegramClient.get(path, (req2, res2, next2, obj) => {
+    res.send(obj)
+    next()
   })
 })
 
