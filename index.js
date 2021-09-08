@@ -28,7 +28,11 @@ server.get('/v2hot', (req, res, next) => {
 server.get('/newOrder', (req, res, next) => {
   const info = 'hello from restify'
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${info}`
+  console.log(path);
   telegramClient.get(encodeURIComponent(path), (req2, res2, next2, obj) => {
+    console.log(req2);
+    console.log(res2);
+    console.log(obj);
     res.send(obj)
     next()
   })
