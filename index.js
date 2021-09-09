@@ -8,7 +8,7 @@ const telegramClient = restifyClient.createJsonClient({ url: 'https://api.telegr
 const ninjaClient = restifyClient.createJsonClient({ url: 'http://statistics.pandadastudio.com' })
 
 server.pre(restify.plugins.pre.userAgentConnection())
-server.use(restify.plugins.bodyParser())
+server.use(restify.plugins.bodyParser({ mapParams: true }))
 server.use(
   function crossOrigin(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
@@ -35,11 +35,26 @@ server.get('/newOrder', (req, res, next) => {
 })
 
 server.post('/postOrder', (req, res, next) => {
-  const allOrderInfo = JSON.parse(req.body.event_data)
-  const orderInfo = allOrderInfo.order
-  const orderUser = allOrderInfo.user
-  console.log(orderInfo)
-  console.log(user)
+  try {
+    console.log(typeof req.body.event_data)
+    // console.log(req.body.event_data)
+    if (typeof req.body.event_data === 'string') {
+      const allOrderInfo = JSON.parse(req.body.event_data)
+      const orderInfo = allOrderInfo.order
+      const orderUser = allOrderInfo.user
+      console.log(orderInfo)
+      console.log(user)  
+    } else if (typeof req.body.event_data === 'object') {
+      const allOrderInfo = req.body.event_data
+      const orderInfo = allOrderInfo.order
+      const orderUser = allOrderInfo.user
+    } else {
+      console.log('no !!')
+    }
+  } catch(e) {
+    console.log('error??')
+    console.log(e)
+  }
   const info = 'New Order On Website'
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
   telegramClient.get(path, (err, _req, _res, obj) => {
