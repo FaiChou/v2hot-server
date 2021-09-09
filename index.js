@@ -35,7 +35,11 @@ server.get('/newOrder', (req, res, next) => {
 })
 
 server.post('/postOrder', (req, res, next) => {
-  console.log(typeof req.body.event_data)
+  const allOrderInfo = JSON.parse(req.body.event_data)
+  const orderInfo = allOrderInfo.order
+  const orderUser = allOrderInfo.user
+  console.log(orderInfo)
+  console.log(user)
   const info = 'New Order On Website'
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
   telegramClient.get(path, (err, _req, _res, obj) => {
