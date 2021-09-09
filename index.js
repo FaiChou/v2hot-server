@@ -35,27 +35,16 @@ server.get('/newOrder', (req, res, next) => {
 })
 
 server.post('/postOrder', (req, res, next) => {
-  try {
-    console.log(typeof req.body.event_data)
-    // console.log(req.body.event_data)
-    if (typeof req.body.event_data === 'string') {
-      const allOrderInfo = JSON.parse(req.body.event_data)
-      const orderInfo = allOrderInfo.order
-      const orderUser = allOrderInfo.user
-      console.log(orderInfo)
-      console.log(user)  
-    } else if (typeof req.body.event_data === 'object') {
-      const allOrderInfo = req.body.event_data
-      const orderInfo = allOrderInfo.order
-      const orderUser = allOrderInfo.user
-    } else {
-      console.log('no !!')
-    }
-  } catch(e) {
-    console.log('error??')
-    console.log(e)
+  let info = 'New Order On Website'
+  if (typeof req.body.event_data === 'string') {
+    const allOrderInfo = JSON.parse(req.body.event_data)
+    const orderInfo = allOrderInfo.order
+    info = `New Order ${orderInfo.itemno}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
+  } else if (typeof req.body.event_data === 'object') {
+    const allOrderInfo = req.body.event_data
+    const orderInfo = allOrderInfo.order
+    info = `New Order ${orderInfo.itemno}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
   }
-  const info = 'New Order On Website'
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
   telegramClient.get(path, (err, _req, _res, obj) => {
     res.send(obj)
