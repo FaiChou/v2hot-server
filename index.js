@@ -44,6 +44,11 @@ server.post('/postOrder', (req, res, next) => {
     if (!orderId || orderId !== orderInfo.itemno) {
       orderId = orderInfo.itemno
       info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
+      const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
+      telegramClient.get(path, (err, _req, _res, obj) => {
+        res.send(obj)
+        next()
+      })
     }
   } else if (typeof req.body.event_data === 'object') {
     const allOrderInfo = req.body.event_data
@@ -51,13 +56,13 @@ server.post('/postOrder', (req, res, next) => {
     if (!orderId || orderId !== orderInfo.itemno) {
       orderId = orderInfo.itemno
       info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
+      const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
+      telegramClient.get(path, (err, _req, _res, obj) => {
+        res.send(obj)
+        next()
+      })
     }
   }
-  const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
-  telegramClient.get(path, (err, _req, _res, obj) => {
-    res.send(obj)
-    next()
-  })
 })
 
 server.get('/ninja/:uid/:code', (req, res, next) => {
