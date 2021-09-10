@@ -51,7 +51,7 @@ server.post('/postOrder', (req, res, next) => {
     info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
     const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
     telegramClient.get(path, (err, _req, _res, obj) => {
-      res.send(1)
+      res.send(obj)
       next()
     })
   } else {
@@ -59,7 +59,7 @@ server.post('/postOrder', (req, res, next) => {
     if (orderIds.length > 100) {
       orderIds.splice(0, 50)
     }
-    res.send(0)
+    res.send({ code: 0, message: 'repeated request' })
     next()
   }
 })
