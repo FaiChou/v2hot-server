@@ -34,40 +34,33 @@ server.get('/newOrder', (req, res, next) => {
   })
 })
 
-let orderId = null
+let orderIds = []
 
 server.post('/postOrder', (req, res, next) => {
   let info = 'New Order On Website'
+  let allOrderInfo = null
   if (typeof req.body.event_data === 'string') {
-    const allOrderInfo = JSON.parse(req.body.event_data)
-    const orderInfo = allOrderInfo.order
-    if (!orderId || orderId !== orderInfo.itemno) {
-      orderId = orderInfo.itemno
-      info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
-      const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
-      telegramClient.get(path, (err, _req, _res, obj) => {
-        res.send(1)
-        next()
-      })
-    } else {
-      res.send(0)
-      next()
-    }
+    allOrderInfo = JSON.parse(req.body.event_data)
   } else if (typeof req.body.event_data === 'object') {
-    const allOrderInfo = req.body.event_data
-    const orderInfo = allOrderInfo.order
-    if (!orderId || orderId !== orderInfo.itemno) {
-      orderId = orderInfo.itemno
-      info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
-      const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
-      telegramClient.get(path, (err, _req, _res, obj) => {
-        res.send(1)
-        next()
-      })
-    } else {
-      res.send(0)
+    allOrderInfo = req.body.event_data
+  }
+  const orderInfo = allOrderInfo.order
+  if (orderIds.length === 0 || !orderIds.includes(orderInfo.itemno)) {
+    const orderId = orderInfo.itemno
+    orderIds.push(orderId)
+    info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
+    const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
+    telegramClient.get(path, (err, _req, _res, obj) => {
+      res.send(1)
       next()
+    })
+  } else {
+    // remove half, for memory
+    if (orderIds.length > 100) {
+      orderIds.splice(0, 50)
     }
+    res.send(0)
+    next()
   }
 })
 
