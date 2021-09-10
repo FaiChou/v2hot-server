@@ -46,9 +46,12 @@ server.post('/postOrder', (req, res, next) => {
       info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
       const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
       telegramClient.get(path, (err, _req, _res, obj) => {
-        res.send(obj)
+        res.send(1)
         next()
       })
+    } else {
+      res.send(0)
+      next()
     }
   } else if (typeof req.body.event_data === 'object') {
     const allOrderInfo = req.body.event_data
@@ -58,9 +61,12 @@ server.post('/postOrder', (req, res, next) => {
       info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
       const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
       telegramClient.get(path, (err, _req, _res, obj) => {
-        res.send(obj)
+        res.send(1)
         next()
       })
+    } else {
+      res.send(0)
+      next()
     }
   }
 })
