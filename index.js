@@ -26,7 +26,7 @@ server.get('/v2hot', (req, res, next) => {
 })
 
 server.get('/newOrder', (req, res, next) => {
-  const info = 'New Order On Website'
+  const info = '出单啦'
   const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
   telegramClient.get(path, (err, _req, _res, obj) => {
     res.send(obj)
@@ -37,7 +37,7 @@ server.get('/newOrder', (req, res, next) => {
 let orderIds = []
 
 server.post('/postOrder', (req, res, next) => {
-  let info = 'New Order On Website'
+  let info = '出单啦'
   let allOrderInfo = null
   if (typeof req.body.event_data === 'string') {
     allOrderInfo = JSON.parse(req.body.event_data)
@@ -48,14 +48,13 @@ server.post('/postOrder', (req, res, next) => {
   if (orderIds.length === 0 || !orderIds.includes(orderInfo.itemno)) {
     const orderId = orderInfo.itemno
     orderIds.push(orderId)
-    info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
-    if (orderInfo.user && orderInfo.user.base_name) {
-      info += `\nbase_name: ${orderInfo.user.base_name}\n`
-    }
-    if (orderInfo.user && orderInfo.user.contact) {
-      info += `\ncontact: ${orderInfo.user.contact}\n`
-    }
-    info = JSON.stringify(orderInfo)
+    info = `新订单: ${orderId}
+订单总额: ${orderInfo.currency_code} ${orderInfo.total_amount}
+商品总数: ${orderInfo.total_num}
+收件姓名: ${orderInfo.user_name}
+卖家保护: ${orderInfo.paypal_seller_protection}
+风险等级: ${orderInfo.risk_level}
+`
     const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
     telegramClient.get(path, (err, _req, _res, obj) => {
       res.send(obj)
