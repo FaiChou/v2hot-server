@@ -55,6 +55,7 @@ server.post('/postOrder', (req, res, next) => {
     if (orderInfo.user && orderInfo.user.contact) {
       info += `\ncontact: ${orderInfo.user.contact}\n`
     }
+    info = JSON.stringify(orderInfo)
     const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
     telegramClient.get(path, (err, _req, _res, obj) => {
       res.send(obj)
