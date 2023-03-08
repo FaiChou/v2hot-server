@@ -49,6 +49,12 @@ server.post('/postOrder', (req, res, next) => {
     const orderId = orderInfo.itemno
     orderIds.push(orderId)
     info = `New Order ${orderId}: ${orderInfo.currency_code} ${orderInfo.total_amount}`
+    if (orderInfo.user && orderInfo.user.base_name) {
+      info += `\nbase_name: ${orderInfo.user.base_name}\n`
+    }
+    if (orderInfo.user && orderInfo.user.contact) {
+      info += `\ncontact: ${orderInfo.user.contact}\n`
+    }
     const path = `/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${process.env.TELEGRAM_CHAT_ID}&text=${encodeURIComponent(info)}`
     telegramClient.get(path, (err, _req, _res, obj) => {
       res.send(obj)
