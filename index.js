@@ -17,6 +17,15 @@ server.use(
   }
 )
 
+function formatNumber(num) {
+  if (typeof num === 'number' && !isNaN(num)) {
+    return Number(num.toFixed(1));
+  } else {
+    console.warn('Input is not a valid number');
+    return num;
+  }
+}
+
 
 server.get('/v2hot', (req, res, next) => {
   v2Client.get('/api/topics/hot.json', (err, _req, _res, obj) => {
@@ -50,7 +59,7 @@ server.post('/postOrder', (req, res, next) => {
     orderIds.push(orderId)
     info = `新订单: ${orderId}
 订单总额: ${orderInfo.currency_code} ${orderInfo.total_amount}
-商品总数: ${orderInfo.total_num}
+商品总数: ${formatNumber(orderInfo.total_num)}
 收件姓名: ${orderInfo.user_name}
 卖家保护: ${orderInfo.paypal_seller_protection}
 风险等级: ${orderInfo.risk_level}
